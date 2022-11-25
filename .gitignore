@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+src/main/java/bin/
+src/main/java/org/drinkless/tdlib/TdApi.java
+tdlib.log
+tdlib/

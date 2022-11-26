@@ -1,4 +1,6 @@
 .gradle
+gradlew
+gradlew.bat
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -35,3 +37,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+src/main/java/bin/
+src/main/java/org/drinkless/tdlib/TdApi.java
+tdlib.log
+tdlib/

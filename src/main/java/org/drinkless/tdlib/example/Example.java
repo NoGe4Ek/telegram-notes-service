@@ -35,6 +35,8 @@ public final class Example {
 
     private static final Client.ResultHandler defaultHandler = new DefaultHandler();
     private static final Client.ResultHandler lastMessageHandler = new LastMessageHandler();
+    private static final Client.ResultHandler userHandler = new UserHandler();
+    private static String message = "";
 
     private static final Lock authorizationLock = new ReentrantLock();
     private static final Condition gotAuthorization = authorizationLock.newCondition();
@@ -377,21 +379,29 @@ public final class Example {
         }
     }
 
+    private static class UserHandler implements Client.ResultHandler {
+        @Override
+        public void onResult(TdApi.Object object) {
+            print(((TdApi.User)object).firstName + ": " + message);
+        }
+    }
+
     private static class LastMessageHandler implements Client.ResultHandler {
         @Override
         public void onResult(TdApi.Object object) {
             TdApi.MessageContent messageContent = ((TdApi.Chat) object).lastMessage.content;
             String messageText;
-
             switch (messageContent.getConstructor()) {
                 case TdApi.MessageText.CONSTRUCTOR:
-                    messageText = ((TdApi.MessageText )messageContent).text.text;
+                    messageText = ((TdApi.MessageText)messageContent).text.text;
+
                     break;
                 default:
                     messageText = "Message is not just text" + messageContent;
                     break;
             }
-            print(messageText);
+            client.send(new TdApi.GetUser(((TdApi.MessageSenderUser)((TdApi.Chat) object).lastMessage.senderId).userId), userHandler);
+            message = messageText;
         }
     }
 

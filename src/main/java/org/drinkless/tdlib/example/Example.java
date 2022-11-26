@@ -52,7 +52,7 @@ public final class Example {
     private static final ConcurrentMap<Long, TdApi.SupergroupFullInfo> supergroupsFullInfo = new ConcurrentHashMap<Long, TdApi.SupergroupFullInfo>();
 
     private static final String newLine = System.getProperty("line.separator");
-    private static final String commandsLine = "Enter command (gcs - GetChats, gc <chatId> - GetChat, me - GetMe, sm <chatId> <message> - SendMessage, gm <chatId> <N> - getLastNMessages, lo - LogOut, q - Quit): ";
+    private static final String commandsLine = "Enter command (gcs - GetChats, gc <chatId> - GetChat, me - GetMe, sm <chatId> <message> - SendMessage, lo - LogOut, q - Quit): ";
     private static volatile String currentPrompt = null;
 
     private static void print(String str) {
@@ -232,10 +232,6 @@ public final class Example {
                     haveAuthorization = false;
                     client.send(new TdApi.LogOut(), defaultHandler);
                     break;
-                case "gm":
-                    String[] args = commands[1].split(" ", 2);
-                    getMessages(getChatId(args[0]), Long.parseLong(args[1]));
-                    break;
                 case "q":
                     needQuit = true;
                     haveAuthorization = false;
@@ -299,10 +295,6 @@ public final class Example {
 
         TdApi.InputMessageContent content = new TdApi.InputMessageText(new TdApi.FormattedText(message, null), false, true);
         client.send(new TdApi.SendMessage(chatId, 0, 0, null, replyMarkup, content), defaultHandler);
-    }
-
-    private static void getMessages(long chatId, long countOfMessages) {
-        client.send(new TdApi.GetChat(chatId), defaultHandler);
     }
 
     public static void main(String[] args) throws InterruptedException {

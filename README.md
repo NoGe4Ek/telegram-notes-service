@@ -7,6 +7,20 @@ A service that uses the telegram api to get the last N messages of a specific ch
 - [Task]
 - [Other course projects]
 
+## Usage
+You can get access to service on
+```
+0.0.0.0:8080/glm
+```
+ATTENTION: don't forget to add chatId parameter by
+```
+?chatId=<chatId>
+```
+You also can run docker image by
+```
+docker run -p 80:80 enthusiasticprogrammer/obj_viewer
+```
+
 ## License
 MIT
 

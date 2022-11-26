@@ -22,6 +22,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static org.drinkless.features.Configure.*;
+
 /**
  * Example class for TDLib usage from Java.
  */
@@ -36,7 +38,7 @@ public final class Example {
     private static final Client.ResultHandler defaultHandler = new DefaultHandler();
     private static final Client.ResultHandler lastMessageHandler = new LastMessageHandler();
     private static final Client.ResultHandler userHandler = new UserHandler();
-    private static String message = "";
+    public static String message = "";
 
     private static final Lock authorizationLock = new ReentrantLock();
     private static final Condition gotAuthorization = authorizationLock.newCondition();
@@ -110,8 +112,7 @@ public final class Example {
                 client.send(request, new AuthorizationRequestHandler());
                 break;
             case TdApi.AuthorizationStateWaitPhoneNumber.CONSTRUCTOR: {
-                String phoneNumber = promptString("Please enter phone number: ");
-                client.send(new TdApi.SetAuthenticationPhoneNumber(phoneNumber, null), new AuthorizationRequestHandler());
+                client.send(new TdApi.SetAuthenticationPhoneNumber(phone, null), new AuthorizationRequestHandler());
                 break;
             }
             case TdApi.AuthorizationStateWaitOtherDeviceConfirmation.CONSTRUCTOR: {
@@ -130,7 +131,6 @@ public final class Example {
                 break;
             }
             case TdApi.AuthorizationStateWaitCode.CONSTRUCTOR: {
-                String code = promptString("Please enter authentication code: ");
                 client.send(new TdApi.CheckAuthenticationCode(code), new AuthorizationRequestHandler());
                 break;
             }
@@ -141,7 +141,6 @@ public final class Example {
                 break;
             }
             case TdApi.AuthorizationStateWaitPassword.CONSTRUCTOR: {
-                String password = promptString("Please enter password: ");
                 client.send(new TdApi.CheckAuthenticationPassword(password), new AuthorizationRequestHandler());
                 break;
             }
@@ -207,8 +206,8 @@ public final class Example {
         return str;
     }
 
-    private static void getCommand() {
-        String command = promptString(commandsLine);
+    private static void getCommand(String chatId) {
+        String command = "glm " + chatId; //promptString(commandsLine);
         String[] commands = command.split(" ", 2);
         try {
             switch (commands[0]) {
@@ -308,7 +307,7 @@ public final class Example {
         client.send(new TdApi.GetChat(chatId), lastMessageHandler);
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void setup(String chatId) throws InterruptedException {
         // set log message handler to handle only fatal errors (0) and plain log messages (-1)
         Client.setLogMessageHandler(0, new LogMessageHandler());
 
@@ -325,7 +324,7 @@ public final class Example {
         defaultHandler.onResult(Client.execute(new TdApi.GetTextEntities("@telegram /test_command https://telegram.org telegram.me @gif @test")));
 
         // main loop
-        while (!needQuit) {
+
             // await authorization
             authorizationLock.lock();
             try {
@@ -336,10 +335,10 @@ public final class Example {
                 authorizationLock.unlock();
             }
 
-            while (haveAuthorization) {
-                getCommand();
-            }
-        }
+
+                getCommand(chatId);
+
+
         while (!canQuit) {
             Thread.sleep(1);
         }
@@ -382,7 +381,11 @@ public final class Example {
     private static class UserHandler implements Client.ResultHandler {
         @Override
         public void onResult(TdApi.Object object) {
-            print(((TdApi.User)object).firstName + ": " + message);
+            message = ((TdApi.User)object).firstName + ": " + message;
+            print(message);
+            needQuit = true;
+            haveAuthorization = false;
+            client.send(new TdApi.Close(), defaultHandler);
         }
     }
 
@@ -405,7 +408,7 @@ public final class Example {
         }
     }
 
-    private static class UpdateHandler implements Client.ResultHandler {
+    public static class UpdateHandler implements Client.ResultHandler {
         @Override
         public void onResult(TdApi.Object object) {
             switch (object.getConstructor()) {

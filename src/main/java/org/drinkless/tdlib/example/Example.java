@@ -34,6 +34,7 @@ public final class Example {
     private static volatile boolean canQuit = false;
 
     private static final Client.ResultHandler defaultHandler = new DefaultHandler();
+    private static final Client.ResultHandler lastMessageHandler = new LastMessageHandler();
 
     private static final Lock authorizationLock = new ReentrantLock();
     private static final Condition gotAuthorization = authorizationLock.newCondition();
@@ -232,9 +233,9 @@ public final class Example {
                     haveAuthorization = false;
                     client.send(new TdApi.LogOut(), defaultHandler);
                     break;
-                case "gm":
-                    String[] args = commands[1].split(" ", 2);
-                    getMessages(getChatId(args[0]), Long.parseLong(args[1]));
+                case "glm":
+                    String[] args = commands[1].split(" ", 1);
+                    getLastMessage(getChatId(args[0]));
                     break;
                 case "q":
                     needQuit = true;
@@ -301,8 +302,8 @@ public final class Example {
         client.send(new TdApi.SendMessage(chatId, 0, 0, null, replyMarkup, content), defaultHandler);
     }
 
-    private static void getMessages(long chatId, long countOfMessages) {
-        client.send(new TdApi.GetChat(chatId), defaultHandler);
+    private static void getLastMessage(long chatId) {
+        client.send(new TdApi.GetChat(chatId), lastMessageHandler);
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -373,6 +374,13 @@ public final class Example {
         @Override
         public void onResult(TdApi.Object object) {
             print(object.toString());
+        }
+    }
+
+    private static class LastMessageHandler implements Client.ResultHandler {
+        @Override
+        public void onResult(TdApi.Object object) {
+            print(((TdApi.Chat) object).lastMessage.content.toString());
         }
     }
 

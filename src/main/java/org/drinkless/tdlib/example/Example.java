@@ -380,7 +380,18 @@ public final class Example {
     private static class LastMessageHandler implements Client.ResultHandler {
         @Override
         public void onResult(TdApi.Object object) {
-            print(((TdApi.Chat) object).lastMessage.content.toString());
+            TdApi.MessageContent messageContent = ((TdApi.Chat) object).lastMessage.content;
+            String messageText;
+
+            switch (messageContent.getConstructor()) {
+                case TdApi.MessageText.CONSTRUCTOR:
+                    messageText = ((TdApi.MessageText )messageContent).text.text;
+                    break;
+                default:
+                    messageText = "Message is not just text" + messageContent;
+                    break;
+            }
+            print(messageText);
         }
     }
 

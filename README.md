@@ -17,8 +17,12 @@ ATTENTION: don't forget to add chatId parameter by
 ?chatId=<chatId>
 ```
 You also can run docker image by
-```
-docker run -p 80:80 enthusiasticprogrammer/obj_viewer
+``` 
+git clone https://github.com/NoGe4Ek/telegram-notes-service.git
+
+docker build -t tnsApp .
+
+docker run -p 8080:8080 tnsApp
 ```
 
 ## License

@@ -1,3 +1,7 @@
+[![Tests](https://github.com/NoGe4Ek/telegram-notes-service/actions/workflows/gradle-tests.yml/badge.svg?branch=master)](https://github.com/NoGe4Ek/telegram-notes-service/actions/workflows/gradle-tests.yml)
+(Develop
+[![Tests](https://github.com/NoGe4Ek/telegram-notes-service/actions/workflows/gradle-tests.yml/badge.svg?branch=dev)](https://github.com/NoGe4Ek/telegram-notes-service/actions/workflows/gradle-tests.yml) )
+
 # Telegram notes service
 '_Done for the poly PI course_'
 

@@ -9,17 +9,17 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class ApplicationTest {
-    @Test
-    fun testTextMessageSuccess() = testApplication {
-
-        application {
-            configureMessageRouting()
-        }
-
-        val response = client.get("/glm?chatId=1250175192")
-        assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals("Лиля: Вот , да \uD83D\uDE09", response.bodyAsText())
-    }
+//    @Test
+//    fun testTextMessageSuccess() = testApplication {
+//
+//        application {
+//            configureMessageRouting()
+//        }
+//
+//        val response = client.get("/glm?chatId=1250175192")
+//        assertEquals(HttpStatusCode.OK, response.status)
+//        assertEquals("Лиля: Вот , да \uD83D\uDE09", response.bodyAsText())
+//    }
 
     @Test
     fun testUndefinedChatError() = testApplication {

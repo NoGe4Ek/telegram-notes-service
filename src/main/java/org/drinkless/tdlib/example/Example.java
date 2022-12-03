@@ -323,6 +323,25 @@ public final class Example {
         // test Client.execute
         defaultHandler.onResult(Client.execute(new TdApi.GetTextEntities("@telegram /test_command https://telegram.org telegram.me @gif @test")));
 
+//        while (!needQuit) {
+//            // await authorization
+//            authorizationLock.lock();
+//            try {
+//                while (!haveAuthorization) {
+//                    gotAuthorization.await();
+//                }
+//            } finally {
+//                authorizationLock.unlock();
+//            }
+//
+//            while (haveAuthorization) {
+//                getCommand();
+//            }
+//        }
+//        while (!canQuit) {
+//            Thread.sleep(1);
+//        }
+
         // main loop
 
             // await authorization

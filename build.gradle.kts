@@ -24,6 +24,8 @@ repositories {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.2.0")
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
@@ -44,4 +46,11 @@ dependencies {
 
 tasks.create("stage") {
     dependsOn("installDist")
+}
+
+tasks {
+    // Use the native JUnit support of Gradle.
+    "test"(Test::class) {
+        useJUnitPlatform()
+    }
 }
